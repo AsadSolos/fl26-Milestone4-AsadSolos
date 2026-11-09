@@ -1,0 +1,78 @@
+commit 09b6943384d788f8b4097e7fe0c50288d9cdf7c2
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-08 23:34:57 -0500
+
+    completed design.md, partner pairing report, and CR-1
+
+ CMakeLists.txt                        |  11 +++
+ DESIGN.md                             |  60 +++++++++++-
+ "data/public/space file \303\274.txt" |   1 +
+ include/aiws/gui/ipc_server.hpp       |  50 ++++++++++
+ include/aiws/gui/main_window.hpp      |   6 ++
+ src/ipc_server.cpp                    | 168 ++++++++++++++++++++++++++++++++++
+ src/main.cpp                          |  31 +++++++
+ src/main_window.cpp                   |  22 ++++-
+ tools/aiws_send.cpp                   |  71 ++++++++++++++
+ tools/aiws_send.hpp                   |  13 +++
+ tools/main.cpp                        |  87 ++++++++++++++++++
+ 11 files changed, 518 insertions(+), 2 deletions(-)
+
+commit 703b0db297e02ae2f03d115f94748ff113ad7290
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-07 00:58:00 -0500
+
+    completed code for exercise, including tests
+
+ .gitignore                    |   1 +
+ DESIGN.md                     |   3 +
+ DESIGN_NOTE.md                |  25 +++
+ STARTER_README.pdf            | Bin 0 -> 39600 bytes
+ data/public/doc_ai.txt        |   3 +
+ data/public/doc_retrieval.txt |   3 +
+ data/public/doc_systems.txt   |   3 +
+ data/public/queries.txt       |   4 +
+ src/main.cpp                  |  60 ++++++
+ src/main_window.cpp           | 454 ++++++++++++++++++++++++++++++++++++++++++
+ tests/student_tests.cpp       | 236 ++++++++++++++++++++++
+ 11 files changed, 792 insertions(+)
+
+commit b98a6fb6df4ec0f1b6a584512d959a887abde516
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-10-28 15:27:12 -0500
+
+    added starter files and backend
+
+ CMakeLists.txt                             |  57 ++++++++
+ include/aiws/chunker.hpp                   |  25 ++++
+ include/aiws/chunking_strategy.hpp         |  18 +++
+ include/aiws/context_builder.hpp           |  13 ++
+ include/aiws/context_strategy.hpp          |  17 +++
+ include/aiws/corpus_index.hpp              |  36 ++++++
+ include/aiws/document.hpp                  |  22 ++++
+ include/aiws/gui/context_widget.hpp        |  75 +++++++++++
+ include/aiws/gui/main_window.hpp           | 175 +++++++++++++++++++++++++
+ include/aiws/gui/resettable.hpp            |  22 ++++
+ include/aiws/gui/search_result_model.hpp   |  84 ++++++++++++
+ include/aiws/gui/search_widget.hpp         | 105 +++++++++++++++
+ include/aiws/gui/term_inspector_widget.hpp |  81 ++++++++++++
+ include/aiws/gui/workspace_widget.hpp      | 101 +++++++++++++++
+ include/aiws/processing_core.hpp           |  53 ++++++++
+ include/aiws/processing_types.hpp          |  38 ++++++
+ include/aiws/retrieval_engine.hpp          |  18 +++
+ include/aiws/retrieval_strategy.hpp        |  20 +++
+ include/aiws/text_processor.hpp            |  29 +++++
+ include/aiws/workspace.hpp                 |  19 +++
+ src/chunker.cpp                            |  59 +++++++++
+ src/context_builder.cpp                    |  29 +++++
+ src/context_widget.cpp                     | 114 ++++++++++++++++
+ src/corpus_index.cpp                       |  72 +++++++++++
+ src/document.cpp                           |  14 ++
+ src/processing_core.cpp                    | 118 +++++++++++++++++
+ src/retrieval_engine.cpp                   |  86 ++++++++++++
+ src/search_result_model.cpp                | 134 +++++++++++++++++++
+ src/search_widget.cpp                      | 201 +++++++++++++++++++++++++++++
+ src/term_inspector_widget.cpp              | 116 +++++++++++++++++
+ src/text_processor.cpp                     | 116 +++++++++++++++++
+ src/workspace.cpp                          |  17 +++
+ src/workspace_widget.cpp                   | 118 +++++++++++++++++
+ 33 files changed, 2202 insertions(+)
