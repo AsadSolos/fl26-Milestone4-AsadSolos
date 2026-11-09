@@ -4,6 +4,7 @@
 #include <atomic>
 #include <cstddef>
 #include <thread>
+#include <memory>
 
 #include "aiws/processing_core.hpp"
 #include "aiws/workspace.hpp"
@@ -19,6 +20,7 @@ class ContextWidget;
 class SearchWidget;
 class TermInspectorWidget;
 class WorkspaceWidget;
+class IpcServer;
 
 /**
  * @brief Main application window and coordinator for the M3 AI Workspace GUI.
@@ -72,6 +74,9 @@ public:
      * @param ms_per_document Delay in milliseconds (the --build-delay-ms value).
      */
     void set_build_delay_ms(int ms_per_document);
+
+    //sets the ipc socket path and starts the server
+    void set_ipc_socket(const QString& socket_path);
 
 private slots:
     /** @brief Handles a request to select and add a document to the workspace. */
@@ -170,6 +175,7 @@ private:
     std::atomic<int> build_generation_{0};
     std::atomic<bool> cancel_requested_{false};
     std::thread build_thread_;
+    std::unique_ptr<IpcServer> ipc_server_;
 };
 
 }  // namespace aiws::gui

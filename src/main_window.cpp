@@ -1,5 +1,5 @@
 #include "aiws/gui/main_window.hpp"
-
+#include "aiws/gui/ipc_server.hpp"
 #include "aiws/gui/context_widget.hpp"
 #include "aiws/gui/search_widget.hpp"
 #include "aiws/gui/term_inspector_widget.hpp"
@@ -122,10 +122,30 @@ MainWindow::MainWindow(QWidget* parent)
 //destructor ensures background thread is joined before destruction
 MainWindow::~MainWindow()
 {
+    if (ipc_server_) 
+    {
+        ipc_server_->stop();
+    }
+    
     cancel_requested_ = true;
     if (build_thread_.joinable())
     {
         build_thread_.join();
+    }
+}
+
+//sets the ipc socket path and starts the server
+void MainWindow::set_ipc_socket(const QString& socket_path)
+{
+    auto callback = [this](const QString& path) 
+    {
+        return this->add_document_file(path);
+    };
+    
+    ipc_server_ = std::make_unique<IpcServer>(socket_path, callback, this);
+    if (!ipc_server_->start())
+    {
+        qDebug() << "[main_window] failed to start ipc server";
     }
 }
 
