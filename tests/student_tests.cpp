@@ -160,7 +160,7 @@ void M4StudentTests::testR2CorrectnessStaleResult()
     }
     QVERIFY(searchBtn != nullptr);
     
-    //if AIWS_FAULT_ACCEPT_STALE is defined, the search button will be enabled
+    //if a fault of aiws _ACCEPT_STALE is defined, the search button will be enabled
     QVERIFY(!searchBtn->isEnabled());
 }
 
@@ -199,7 +199,7 @@ void M4StudentTests::testR3Failure()
     }
     QVERIFY(status != nullptr);
 
-    //if AIWS_FAULT_LOSE_FAILURE is defined the status will say "built" and the test fails
+    //if a fault of aiws is defined the status will say "built" and the test fails
     QVERIFY(status->text().contains("failed") || status->text().contains("Not built"));
 }
 
