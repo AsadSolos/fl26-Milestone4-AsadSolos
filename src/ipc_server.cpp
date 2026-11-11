@@ -6,6 +6,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <cerrno>
+#include <cstdint>
 
 namespace aiws::gui {
 
@@ -60,6 +61,7 @@ bool IpcServer::start()
     return true;
 }
 
+//stops the background thread and removes the socket file
 void IpcServer::stop()
 {
     qDebug() << "[ipc] stop() called";
@@ -140,23 +142,29 @@ void IpcServer::run_server()
 //reads a full message from the connected client
 bool IpcServer::read_request(int client_fd, std::string& out_message)
 {
-    //we read byte by byte until we hit a newline
-    char buffer[1024];
-    while (true)
+    //read the 4-byte length prefix
+    uint32_t len = 0;
+    ssize_t bytes = read(client_fd, &len, sizeof(len));
+    if (bytes != sizeof(len))
     {
-        ssize_t bytes = read(client_fd, buffer, sizeof(buffer));
-        if (bytes <= 0) return false;
-        
-        out_message.append(buffer, bytes);
-        
-        //check if we received the newline terminator
-        if (out_message.find('\n') != std::string::npos)
-        {
-            //strip the newline
-            out_message = out_message.substr(0, out_message.find('\n'));
-            return true;
-        }
+        return false;
     }
+
+    //read exactly len bytes for the message
+    out_message.resize(len);
+    size_t total_read = 0;
+    
+    while (total_read < len)
+    {
+        bytes = read(client_fd, out_message.data() + total_read, len - total_read);
+        if (bytes <= 0)
+        {
+            return false;
+        }
+        total_read += bytes;
+    }
+
+    return true;
 }
 
 //sends a reply byte to the client and closes the connection

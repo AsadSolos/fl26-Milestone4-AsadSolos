@@ -6,6 +6,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
+#include <cstdint>
 
 namespace aiws {
 namespace tools {
@@ -25,7 +26,6 @@ int send_command(const std::string& socket_path, const std::string& command)
     addr.sun_family = AF_UNIX;
     std::strncpy(addr.sun_path, socket_path.c_str(), sizeof(addr.sun_path) - 1);
 
-    //try to connect
     if (connect(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0)
     {
         std::cerr << "No application could be reached within 2s\n";
@@ -33,38 +33,34 @@ int send_command(const std::string& socket_path, const std::string& command)
         return 2;
     }
 
-    //append newline to the command
-    std::string message = command + "\n";
+    //send the length of the command as a 4-byte integer
+    uint32_t len = static_cast<uint32_t>(command.size());
+    if (write(sock, &len, sizeof(len)) != sizeof(len))
+    {
+        std::cerr << "Failed to send length\n";
+        close(sock);
+        return 2;
+    }
 
-    //send the message
-    ssize_t bytes_written = write(sock, message.c_str(), message.size());
-    if (bytes_written < 0 || static_cast<size_t>(bytes_written) != message.size())
+    //send the actual command bytes
+    if (write(sock, command.c_str(), len) != len)
     {
         std::cerr << "Failed to send command\n";
         close(sock);
         return 2;
     }
 
-    //wait for reply
+    //read the reply
     char reply = 0;
-    ssize_t bytes_read = read(sock, &reply, 1);
-    close(sock);
-
-    if (bytes_read != 1)
+    if (read(sock, &reply, 1) != 1)
     {
         std::cerr << "Communication failed\n";
+        close(sock);
         return 2;
     }
+    close(sock);
 
-    if (reply == '0')
-    {
-        return 0; //success
-    }
-    else
-    {
-        std::cerr << "Application rejected the request\n";
-        return 1;
-    }
+    return (reply == '0') ? 0 : 1;
 }
 
 }  // namespace tools
