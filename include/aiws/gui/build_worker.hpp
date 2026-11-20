@@ -1,8 +1,8 @@
 #pragma once
 
 #include <condition_variable>
-#include <cstdint>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <optional>
 #include <thread>
@@ -12,12 +12,21 @@
 
 namespace aiws::gui {
 
-//outcome of one finished build handed from the worker to the gui thread
-struct BuildResult
+//receives the outcome of a build on the gui thread
+class BuildSink
 {
-    std::uint64_t id{0};
-    bool success{false};
-    ProcessingCore core;
+public:
+    virtual ~BuildSink() = default;
+    virtual void build_succeeded(ProcessingCore&& core) = 0;
+    virtual void build_failed() = 0;
+};
+
+//a finished build that knows its own outcome and reports it to a sink
+class BuildOutcome
+{
+public:
+    virtual ~BuildOutcome() = default;
+    virtual void deliver(BuildSink& sink) = 0;
 };
 
 //owns the one persistent build thread that lives from construction until shutdown
@@ -36,14 +45,14 @@ public:
     BuildWorker(const BuildWorker&) = delete;
     BuildWorker& operator=(const BuildWorker&) = delete;
 
-    //hands a snapshot to the worker without waiting and returns the id of the request
-    std::uint64_t submit(Workspace snapshot, int delay_ms);
+    //hands a snapshot to the worker without waiting
+    void submit(Workspace snapshot, int delay_ms);
 
     //drops the pending request and wakes the running build so it stops now
     void cancel();
 
-    //moves out the finished result if there is one
-    std::optional<BuildResult> take_result();
+    //moves out the finished outcome or returns null when there is none
+    std::unique_ptr<BuildOutcome> take_outcome();
 
     //stops the worker at any moment and joins it
     void shutdown();
@@ -54,7 +63,6 @@ private:
     {
         Workspace snapshot;
         int delay_ms{0};
-        std::uint64_t id{0};
     };
 
     //the worker loop that waits for a job builds it and reports it
@@ -67,8 +75,7 @@ private:
     std::mutex mutex_;
     std::condition_variable cv_;
     std::optional<Job> pending_;
-    std::optional<BuildResult> result_;
-    std::uint64_t next_id_{0};
+    std::unique_ptr<BuildOutcome> outcome_;
     bool running_{false};
     bool cancel_requested_{false};
     bool stop_{false};

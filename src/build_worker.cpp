@@ -6,8 +6,40 @@
 
 namespace aiws::gui {
 
+namespace {
+
+//a build that produced a corpus
+class SucceededOutcome final : public BuildOutcome
+{
+public:
+    explicit SucceededOutcome(ProcessingCore&& core) : core_(std::move(core)) {}
+
+    void deliver(BuildSink& sink) override
+    {
+        sink.build_succeeded(std::move(core_));
+    }
+
+private:
+    ProcessingCore core_;
+};
+
+//a build that threw
+class FailedOutcome final : public BuildOutcome
+{
+public:
+    void deliver(BuildSink& sink) override
+    {
+        sink.build_failed();
+    }
+};
+
+}  // namespace
+
 //starts the single worker thread
-BuildWorker::BuildWorker(DoneCallback on_done) : on_done_(std::move(on_done)), thread_(&BuildWorker::run, this) {}
+BuildWorker::BuildWorker(DoneCallback on_done)
+    : on_done_(std::move(on_done)), thread_(&BuildWorker::run, this)
+{
+}
 
 //stops and joins the worker thread
 BuildWorker::~BuildWorker()
@@ -15,18 +47,15 @@ BuildWorker::~BuildWorker()
     shutdown();
 }
 
-//hands a snapshot to the worker without waiting and returns the id of the request
-std::uint64_t BuildWorker::submit(Workspace snapshot, int delay_ms)
+//hands a snapshot to the worker without waiting
+void BuildWorker::submit(Workspace snapshot, int delay_ms)
 {
-    std::uint64_t id = 0;
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        id = ++next_id_;
-        pending_ = Job{std::move(snapshot), delay_ms, id};
-        result_.reset();
+        pending_ = Job{std::move(snapshot), delay_ms};
+        outcome_.reset();
     }
     cv_.notify_one();
-    return id;
 }
 
 //drops the pending request and wakes the running build so it stops now
@@ -35,7 +64,7 @@ void BuildWorker::cancel()
     {
         std::lock_guard<std::mutex> lock(mutex_);
         pending_.reset();
-        result_.reset();
+        outcome_.reset();
         if (running_)
         {
 #ifndef AIWS_FAULT_NO_CANCEL
@@ -46,13 +75,11 @@ void BuildWorker::cancel()
     cv_.notify_all();
 }
 
-//moves out the finished result if there is one
-std::optional<BuildResult> BuildWorker::take_result()
+//moves out the finished outcome or returns null when there is none
+std::unique_ptr<BuildOutcome> BuildWorker::take_outcome()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::optional<BuildResult> out = std::move(result_);
-    result_.reset();
-    return out;
+    return std::move(outcome_);
 }
 
 //stops the worker at any moment and joins it
@@ -101,23 +128,23 @@ void BuildWorker::run()
         if (wanted)
         {
             lock.unlock();
-            BuildResult result;
-            result.id = job.id;
+            std::unique_ptr<BuildOutcome> outcome;
             try
             {
-                result.core.rebuild(job.snapshot);
-                result.success = true;
+                ProcessingCore core;
+                core.rebuild(job.snapshot);
+                outcome = std::make_unique<SucceededOutcome>(std::move(core));
             }
             catch (const std::exception&)
             {
-                result.success = false;
+                outcome = std::make_unique<FailedOutcome>();
             }
             lock.lock();
 
             wanted = !stop_ && !cancel_requested_;
             if (wanted)
             {
-                result_ = std::move(result);
+                outcome_ = std::move(outcome);
             }
         }
 
