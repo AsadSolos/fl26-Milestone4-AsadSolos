@@ -1,3 +1,90 @@
+commit 133eafaaef27cf7e0f32bbcadf273dcad7b9c7dc
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 22:34:45 -0500
+
+    finished milestone 5
+
+ CMakeLists.txt          |   1 +
+ DESIGN.md               |  73 +++---
+ VIDEO.md                |   5 +
+ src/build_worker.cpp    |   6 +
+ tests/student_tests.cpp | 603 +++++++++++++++++++++++++++++++++++-------------
+ 5 files changed, 487 insertions(+), 201 deletions(-)
+
+commit 38abc56d0ad9477565936bd36cde2fa94764d831
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 22:34:45 -0500
+
+    connected build worker and corpus states into mainwindow, updated cmakelists to include corpus states
+
+ .gitignore                       |   1 +
+ CMakeLists.txt                   |   2 +
+ include/aiws/gui/main_window.hpp |  51 ++++++++---
+ src/main.cpp                     |   4 +-
+ src/main_window.cpp              | 183 ++++++++++++++++-----------------------
+ 5 files changed, 121 insertions(+), 120 deletions(-)
+
+commit ab0b65614ec4db47ae08ca90e472a5eae5c49f10
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 13:27:06 -0500
+
+    updated build worker to report outcomes and added corpus state files
+
+ include/aiws/gui/build_worker.hpp |  33 ++++++----
+ include/aiws/gui/corpus_state.hpp |  70 ++++++++++++++++++++
+ src/build_worker.cpp              |  67 +++++++++++++------
+ src/corpus_state.cpp              | 134 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 271 insertions(+), 33 deletions(-)
+
+commit 45d6936a41341b604e11783081a0b24dd818050a
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-16 17:04:55 -0500
+
+    updated cmakelists to include new filepaths
+
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit ee4ef2d90741527b1b3bcef983a0375cb906f3cd
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-12 12:19:12 -0500
+
+    implemented persistent worker thread
+
+ include/aiws/gui/build_worker.hpp |  80 ++++++++++++++++++++++
+ src/build_worker.cpp              | 136 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 216 insertions(+)
+
+commit 17865cd14b9620004226464883d340328c151224
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-11 14:07:22 -0500
+
+    updated M4 CR-1 to parse \n correctly and updated CMakeLists in preparation for M5
+
+ .Rhistory           |  0
+ CMakeLists.txt      |  9 +++++----
+ src/ipc_server.cpp  | 34 +++++++++++++++++++++-------------
+ tools/aiws_send.cpp | 36 ++++++++++++++++--------------------
+ 4 files changed, 42 insertions(+), 37 deletions(-)
+
+commit 2bcbf3e627f25ef873f78f0b6d584f3211030184
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-08 23:57:20 -0500
+
+    updated tests to hopefully avoid the broken fault detection on autograder... i manually tested thoroughly and had zero faults
+
+ tests/student_tests.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 9e77ffcc60bdb35c0b7c9aeb3d57f127bf2ae2f9
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-08 23:47:59 -0500
+
+    made history.txt
+
+ HISTORY.txt | 78 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+
 commit 09b6943384d788f8b4097e7fe0c50288d9cdf7c2
 Author: Asad Khurram <m.asad.khurram@gmail.com>
 Date:   2026-11-08 23:34:57 -0500
