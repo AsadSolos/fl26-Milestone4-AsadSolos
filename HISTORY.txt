@@ -1,3 +1,78 @@
+commit 40148c67238713a17aa45c2e8c23bd11c5d416e1
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 22:56:37 -0500
+
+    hopefulyl fully fixed CR-1 newline error now
+
+ tools/main.cpp | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+commit 7a40b66fff5b11782a6abc05babcb2eb92731a4d
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 22:47:07 -0500
+
+    removed aiws fault line from comments in cmakelists and removed walkthru mp4 file and demonstration text files to hopefully not mess with the autograder
+
+ demonstration_text_files/test (copy 1).txt         | 3521 --------------------
+ demonstration_text_files/test (copy 2).txt         | 3521 --------------------
+ demonstration_text_files/test (copy 3).txt         | 3521 --------------------
+ demonstration_text_files/test (copy 4).txt         | 3521 --------------------
+ demonstration_text_files/test (copy 5).txt         | 3521 --------------------
+ demonstration_text_files/test (copy 6).txt         | 3521 --------------------
+ demonstration_text_files/test (copy 7).txt         | 3521 --------------------
+ .../test (copy 8) (copy 1).txt                     | 3521 --------------------
+ .../test (copy 8) (copy 2).txt                     | 3521 --------------------
+ .../test (copy 8) (copy 3).txt                     | 3521 --------------------
+ .../test (copy 8) (copy 4).txt                     | 3521 --------------------
+ .../test (copy 8) (copy 5).txt                     | 3521 --------------------
+ .../test (copy 8) (copy 6).txt                     | 3521 --------------------
+ demonstration_text_files/test (copy 8).txt         | 3521 --------------------
+ demonstration_text_files/test.txt                  | 3521 --------------------
+ 15 files changed, 52815 deletions(-)
+
+commit 26f80ea7af5c74358fdb38b56e78f425cde43676
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 22:46:02 -0500
+
+    removed aiws fault line from comments in cmakelists
+
+ ..._walkthru_Applied_Software_design_sook_shin_ha.mp4 | Bin 9720844 -> 0 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 0c27a9ad99a23505ea702cb14ec34cce6f86fab9
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 22:45:43 -0500
+
+    removed aiws fault line from comments in cmakelists
+
+ ...lkthru_Applied_Software_design_sook_shin_ha.mp4 |  Bin 0 -> 9720844 bytes
+ CMakeLists.txt                                     |    1 -
+ demonstration_text_files/test (copy 1).txt         | 3521 ++++++++++++++++++++
+ demonstration_text_files/test (copy 2).txt         | 3521 ++++++++++++++++++++
+ demonstration_text_files/test (copy 3).txt         | 3521 ++++++++++++++++++++
+ demonstration_text_files/test (copy 4).txt         | 3521 ++++++++++++++++++++
+ demonstration_text_files/test (copy 5).txt         | 3521 ++++++++++++++++++++
+ demonstration_text_files/test (copy 6).txt         | 3521 ++++++++++++++++++++
+ demonstration_text_files/test (copy 7).txt         | 3521 ++++++++++++++++++++
+ .../test (copy 8) (copy 1).txt                     | 3521 ++++++++++++++++++++
+ .../test (copy 8) (copy 2).txt                     | 3521 ++++++++++++++++++++
+ .../test (copy 8) (copy 3).txt                     | 3521 ++++++++++++++++++++
+ .../test (copy 8) (copy 4).txt                     | 3521 ++++++++++++++++++++
+ .../test (copy 8) (copy 5).txt                     | 3521 ++++++++++++++++++++
+ .../test (copy 8) (copy 6).txt                     | 3521 ++++++++++++++++++++
+ demonstration_text_files/test (copy 8).txt         | 3521 ++++++++++++++++++++
+ demonstration_text_files/test.txt                  | 3521 ++++++++++++++++++++
+ 17 files changed, 52815 insertions(+), 1 deletion(-)
+
+commit 2dd03c8d8bf73431417673c02b269e8f1c60341c
+Author: Asad Khurram <m.asad.khurram@gmail.com>
+Date:   2026-11-20 22:40:47 -0500
+
+    history text generated
+
+ HISTORY.txt | 87 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+
 commit 133eafaaef27cf7e0f32bbcadf273dcad7b9c7dc
 Author: Asad Khurram <m.asad.khurram@gmail.com>
 Date:   2026-11-20 22:34:45 -0500
