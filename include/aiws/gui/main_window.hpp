@@ -1,11 +1,10 @@
 #pragma once
 
 #include <QMainWindow>
-#include <atomic>
 #include <cstddef>
-#include <thread>
 #include <memory>
 
+#include "aiws/gui/build_worker.hpp"
 #include "aiws/processing_core.hpp"
 #include "aiws/workspace.hpp"
 
@@ -21,6 +20,7 @@ class SearchWidget;
 class TermInspectorWidget;
 class WorkspaceWidget;
 class IpcServer;
+class CorpusState;
 
 /**
  * @brief Main application window and coordinator for the M3 AI Workspace GUI.
@@ -29,7 +29,7 @@ class IpcServer;
  * major GUI components, and coordinates application-wide state changes and
  * backend operations in response to component events.
  */
-class MainWindow final : public QMainWindow {
+class MainWindow final : public QMainWindow, private BuildSink {
     Q_OBJECT
 
 public:
@@ -133,7 +133,15 @@ private slots:
      */
     void exit_application();
 
+    //called on the gui thread when the background build finishes
+    void on_build_finished();
+
 private:
+    //the state objects decide every corpus transition and drive these private helpers
+    friend class NotBuiltState;
+    friend class BuildingState;
+    friend class CurrentState;
+
     /**
      * @brief Updates availability of actions that depend on current application state.
      */
@@ -145,22 +153,42 @@ private:
      * Processing output that depends on the previous corpus is no longer made
      * available after invalidation.
      */
-    void invalidate_corpus();
+    void show_not_built();
 
     /**
      * @brief Clears displayed search and context output that depends on processing state.
      */
     void clear_processing_outputs();
 
-    //worker function that runs on the background thread to build the corpus
-    void run_background_build(Workspace snapshot, int generation);
+    //swaps the current state object and refreshes the action states
+    void set_state(std::unique_ptr<CorpusState> next);
 
-    //called on the gui thread when the background build finishes
-    void on_build_finished(bool success, std::size_t chunk_count, int generation);
+    //snapshots the workspace and hands it to the worker
+    void start_build();
+
+    //tells the worker that the running build is no longer wanted
+    void cancel_build();
+
+    //takes over the corpus that the worker built
+    void install_core(ProcessingCore&& core);
+
+    //shows that the build threw and no corpus exists
+    void show_build_failed();
+
+    //restores the workspace and every widget to the startup state
+    void restore_startup();
+
+    //called on the worker thread and queues on_build_finished on the gui thread
+    void post_build_done();
+
+    //receives a built corpus from the outcome object and forwards it to the state
+    void build_succeeded(ProcessingCore&& core) override;
+
+    //receives a build failure from the outcome object and forwards it to the state
+    void build_failed() override;
 
     Workspace workspace_;
     ProcessingCore processing_core_;
-    bool corpus_current_{false};
     ExitCallback exit_callback_{nullptr};
 
     WorkspaceWidget* workspace_widget_{nullptr};
@@ -172,9 +200,8 @@ private:
     QPushButton* exit_button_{nullptr};
 
     int build_delay_ms_{0};
-    std::atomic<int> build_generation_{0};
-    std::atomic<bool> cancel_requested_{false};
-    std::thread build_thread_;
+    std::unique_ptr<CorpusState> current_state_;
+    std::unique_ptr<BuildWorker> build_worker_;
     std::unique_ptr<IpcServer> ipc_server_;
 };
 

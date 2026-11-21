@@ -36,6 +36,7 @@ add_library(aiws_app STATIC
     src/search_result_model.cpp
     src/ipc_server.cpp
     src/build_worker.cpp
+    src/corpus_state.cpp
     include/aiws/gui/main_window.hpp
     include/aiws/gui/resettable.hpp
     include/aiws/gui/workspace_widget.hpp
@@ -45,6 +46,7 @@ add_library(aiws_app STATIC
     include/aiws/gui/search_result_model.hpp
     include/aiws/gui/ipc_server.hpp
     include/aiws/gui/build_worker.hpp
+    include/aiws/gui/corpus_state.hpp
 )
 target_include_directories(aiws_app PUBLIC include)
 target_link_libraries(aiws_app PUBLIC aiws_m2 Qt6::Widgets)

@@ -49,10 +49,10 @@ int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName(QStringLiteral("AI Workspace"));
-    QCoreApplication::setApplicationVersion(QStringLiteral("4.0"));
+    QCoreApplication::setApplicationVersion(QStringLiteral("5.0"));
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(QStringLiteral("AI Workspace M4"));
+    parser.setApplicationDescription(QStringLiteral("AI Workspace M5"));
     parser.addHelpOption();
     parser.addVersionOption();
 
