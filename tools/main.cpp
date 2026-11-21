@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstdlib>
 #include <unistd.h>
+#include <filesystem>
 
 //gets the default socket path
 std::string get_default_socket_path()
@@ -74,14 +75,20 @@ int main(int argc, char* argv[])
             return 2;
         }
     }
-
     if (!has_add || file_path.empty())
     {
         print_usage();
         return 2;
     }
 
-    //we construct the command string as "add <file_path>"
+    //convert to absolute path so the app can find it regardless of working directory
+    std::error_code ec;
+    std::filesystem::path abs_path = std::filesystem::absolute(file_path, ec);
+    if (!ec)
+    {
+        file_path = abs_path.string();
+    }
+
     command = "add " + file_path;
     return aiws::tools::send_command(socket_path, command);
 }
