@@ -3,6 +3,7 @@
 #include <chrono>
 #include <exception>
 #include <utility>
+#include <iostream>
 
 namespace aiws::gui {
 
@@ -65,6 +66,11 @@ void BuildWorker::cancel()
         std::lock_guard<std::mutex> lock(mutex_);
         pending_.reset();
         outcome_.reset();
+#ifdef AIWS_FAULT_NO_CANCEL
+        std::cerr << "[fault] NO_CANCEL active" << std::endl;
+#else
+        std::cerr << "[normal] cancel active" << std::endl;
+#endif
         if (running_)
         {
 #ifndef AIWS_FAULT_NO_CANCEL

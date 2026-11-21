@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(ai_workspace_m5 LANGUAGES CXX)
+# add_compile_definitions(AIWS_FAULT_NO_CANCEL)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
